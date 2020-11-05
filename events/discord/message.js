@@ -2,8 +2,6 @@ module.exports = async (client, message) => {
 
     if (message.author.bot) return;
 
-    client.log("MESSAGE", `${message.guild ? `[G: ${message.guild.name}] [C: ${message.channel.name}]` : `[DM]`} [U: ${message.author.tag}] ${message.content}`);
-
     let args;
     let userConf;
     let guildConf;
