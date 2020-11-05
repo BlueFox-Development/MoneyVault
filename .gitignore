@@ -1,6 +1,7 @@
 /.idea/
 /node_modules/
-/logs/*
+/logs/**
+!/logs/.gitkeep
 
 config.js
 
