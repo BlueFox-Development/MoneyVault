@@ -43,7 +43,10 @@ module.exports = (client) => {
         let giveaways = serverDB.giveaways;
 
         let channel = await client.channels.cache.get(channelID);
+        if (!channel) return null;
+
         let message = await channel.messages.fetch(messageID);
+        if (!message) return null;
 
         let embed = message.embeds[0];
 
@@ -67,18 +70,25 @@ module.exports = (client) => {
             if (g.messageID === messageID) return g;
         })
 
-        throw "No giveaway was found"
+        return null;
 
     }
 
     client.endGiveaway = async (guildID, channelID, messageID) => {
 
         let guild = await client.guilds.cache.get(guildID);
+        if (!guild) return null;
+
         let channel = await client.channels.cache.get(channelID);
+        if (!channel) return null;
+
         let message = await channel.messages.fetch(messageID);
+        if (!message) return null;
 
         let reactions = message.reactions.cache;
         let reaction = reactions.get("🎁") || reactions.find(r => r.emoji.name === "🎁");
+        if (!reaction) return null;
+
         let users = (await reaction.users.fetch())
             .filter(u => u.bot === false)
             .filter(u => u.id !== message.client.user.id)
@@ -86,6 +96,7 @@ module.exports = (client) => {
             .array();
 
         let giveaway = await client.getGiveaway(guildID, messageID);
+        if (giveaway === null) return null;
 
         let prize = giveaway.prize;
         let messageLink = `https://discord.com/channels/${guildID}/${channelID}/${messageID}`;

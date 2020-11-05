@@ -6,8 +6,8 @@ module.exports = (client) => {
 
     client.log = (title, msg) => {
         let time = moment().format(client.config.timeFormat);
-        if (!title) return;
-        let format = `[${time}] [${title}] ${msg}`;
+        if (!title || !msg) return;
+        let format = `[${time}-CST] [${title}] ${msg}`;
         console.log(format);
 
         let date = new Date();
@@ -20,37 +20,37 @@ module.exports = (client) => {
 
     }
 
-    client.error = (severity, error) => {
+    client.error = (level, error) => {
 
-        switch (severity) {
-            case 0:
-                // Messages that contain information normally
-                // of use only when debugging a program
-                severity = "DEBUG";
-            case 1:
-                // Informational messages
-                severity = "INFO";
-            case 2:
-                // Warning conditions
-                severity = "WARNING";
-            case 3:
-                // A condition that should be corrected
-                // immediately, such as a corrupted system database
-                severity = "ALERT";
-            case 4:
-                // Error conditions
-                severity = "ERROR";
-            case 5:
-                // Conditions that are not error conditions,
-                // but that may require special handling
-                severity = "EMERGENCY"
+        let severity = null;
+
+        if (level === 0) {
+            severity = "DEBUG";
+        } else if (level === 1) {
+            severity = "INFO";
+        } else if (level === 2) {
+            severity = "WARNING";
+        } else if (level === 3) {
+            severity = "ALERT";
+        } else if (level === 4) {
+            severity = "ERROR";
+        } else if (level === 5) {
+            severity = "EMERGENCY";
+        } else {
+            severity = "UNKNOWN";
         }
 
         let date = new Date();
         let dir = `./logs/${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}`;
-        if (!fs.existsSync(dir)) { fs.mkdirSync(dir); }
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
-        fs.appendFile(`${dir}/errors.txt`, `[${severity}] => ${error}\n`, (err) => {
+        dir = `${dir}/errors/`;
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+        let time = moment().format(client.config.timeFormat);
+        let format = `[${time}-CST] [${severity}] ${error}\n`;
+
+        fs.appendFile(`${dir}/${severity.toLowerCase()}.txt`, format, (err) => {
             if (err) console.error(err);
         });
 
