@@ -1,0 +1,13 @@
+/.idea/
+/node_modules/
+/logs/*
+
+config.js
+
+/database/servers/enmap.sqlite
+/database/servers/enmap.sqlite-wal
+/database/servers/enmap.sqlite-shm
+
+/database/users/enmap.sqlite
+/database/users/enmap.sqlite-wal
+/database/users/enmap.sqlite-shm
